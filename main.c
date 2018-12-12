@@ -1,4 +1,4 @@
 int main(int argc, char const *argv[]) {
-  /* code */
+  int semd;
   return 0;
 }

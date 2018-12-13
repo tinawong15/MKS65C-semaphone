@@ -5,17 +5,19 @@
 // create function
 int create(){
   printf("Creating Semaphore...\n");
-  
-  int shmid = shmget(KEY, 200, 0644 | IPC_CREAT);
+
+  // ceates shared memory
+  int shmid = shmget(KEY, sizeof(int), 0644 | IPC_CREAT);
   if (shmid == -1){
     printf("Error: %s\n", strerror(errno));
     return 1;
   }
 
+  // creates semaphore
   int semid = semget(KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
   if (semid == -1){
     printf("Error: %s\n", strerror(errno));
-    return 1;
+    return 0;
   }
 
   union semun s;
@@ -26,37 +28,13 @@ int create(){
     return 1;
   }
 
+  // creates file story.txt
   int fd = open("story.txt", O_CREAT | O_TRUNC);
   if (fd == -1){
-    printf("Error: %s\n", strerror(errno));
+    printf("File: %s\n", strerror(errno));
     return 1;
   }
 
-  return 0;
-}
-
-// remove function
-int rem(){
-  printf("Removing Semaphore...\n");
-
-  int shmid = shmget(KEY, 200, 0644);
-  if (shmid == -1){
-    printf("Error: %s\n", strerror(errno));
-    return 1;
-  }
-  int semid = semget(KEY, 1, 0644);
-  if (semid == -1){
-    printf("Error: %s\n", strerror(errno));
-    return 1;
-  }
-
-  union semun s;
-  s.val = 0;
-  int sem_status = semctl(semid, 0, IPC_RMID, s);
-  if (sem_status == -1){
-    printf("Error: %s\n", strerror(errno));
-    return 1;
-  }
   return 0;
 }
 
@@ -76,8 +54,45 @@ int view(){
   //   return 1;
   // }
   printf("'%s'\n", file);
+  close(fd);
   return 0;
 }
+
+// remove function
+int rem(){
+  printf("Removing Semaphore...\n");
+
+  int shmid = shmget(KEY, sizeof(int), 0644);
+  if (shmid == -1){
+    printf("Error: %s\n", strerror(errno));
+    return 0;
+  }
+  int semid = semget(KEY, 1, 0644);
+  if (semid == -1){
+    printf("Error: %s\n", strerror(errno));
+    return 0;
+  }
+
+  struct sembuf sb;
+  sb.sem_num = 0;
+  sb.sem_flg = SEM_UNDO;
+  sb.sem_op = -1;
+  int semop_status = semop(semd, &sb, 1);
+
+
+  int sem_status = semctl(semid, 0, IPC_RMID, NULL);
+  if (sem_status == -1){
+    printf("Error: %s\n", strerror(errno));
+    return 0;
+  }
+
+  view();
+
+  remove("story.txt");
+
+  return 0;
+}
+
 
 // main
 int main(int argc, char * argv[]) {

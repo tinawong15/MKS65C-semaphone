@@ -15,4 +15,4 @@ run:
 	./a.out
 
 clean:
-	rm -rf *.o a.out control
+	rm -rf *.o a.out control *.txt

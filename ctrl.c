@@ -67,8 +67,8 @@ int rem(){
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
-  int semid = semget(KEY, 1, 0644);
-  if (semid == -1){
+  int semd = semget(KEY, 1, 0644);
+  if (semd == -1){
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
@@ -80,7 +80,7 @@ int rem(){
   int semop_status = semop(semd, &sb, 1);
 
 
-  int sem_status = semctl(semid, 0, IPC_RMID, NULL);
+  int sem_status = semctl(semd, 0, IPC_RMID, NULL);
   if (sem_status == -1){
     printf("Error: %s\n", strerror(errno));
     return 0;

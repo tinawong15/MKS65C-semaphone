@@ -39,10 +39,12 @@ int main() {
     return 0;
   }
   int len_story = strlen(file);
-  file = file + len_story - *data;
+  char * l = file + len_story - *data;
 
+  char * p = strchr(l, '\n');
+  if (p) *p = 0;
 
-  printf("Last Line of the Story: '%s'\n", file);
+  printf("Last Line of the Story: '%s'\n", l);
   close(fd);
   free(file);
 
@@ -63,7 +65,7 @@ int main() {
 
   // updates shared memory
   *data = strlen(line);
-  printf("%d", *data);
+  free(line);
 
   //UPPING
   sb.sem_op = 1;

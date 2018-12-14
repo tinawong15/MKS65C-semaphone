@@ -22,7 +22,7 @@ int main() {
     return 0;
   }
   data = shmat(shmid, (void *) 0, 0);
-  if (data == (char *)(-1)){
+  if (data == (int *)(-1)){
     perror("shmat");
   }
 
@@ -47,15 +47,12 @@ int main() {
 
   char * line = calloc(sizeof(char), 200);
   fgets(line, 200, stdin);
-  printf("MEOW");
   fd = open("story.txt", O_APPEND | O_WRONLY);
-  printf("MEw");
   if (fd == -1) {
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
   int write_status = write(fd, line, 200);
-  printf("MEOWasdadas");
   if (write_status == -1){
     printf("Error: %s\n", strerror(errno));
     return 0;

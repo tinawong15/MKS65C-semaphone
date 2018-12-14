@@ -29,9 +29,9 @@ int create(){
   }
 
   // creates file story.txt
-  int fd = open("story.txt", O_CREAT | O_TRUNC);
+  int fd = open("story.txt", O_CREAT | O_TRUNC, 0644);
   if (fd == -1){
-    printf("File: %s\n", strerror(errno));
+    printf("Error: %s\n", strerror(errno));
     return 1;
   }
 
@@ -67,6 +67,8 @@ int rem(){
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
+  shmctl(shmid, IPC_RMID, NULL);
+
   int semd = semget(KEY, 1, 0644);
   if (semd == -1){
     printf("Error: %s\n", strerror(errno));

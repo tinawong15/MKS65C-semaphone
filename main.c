@@ -31,13 +31,16 @@ int main() {
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
-  lseek(fd, *data, SEEK_END);
+
   char * file = calloc(200, sizeof(char));
   int read_status = read(fd, file, 200);
   if (read_status == -1){
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
+  int len_story = strlen(file);
+  file = file + len_story - *data;
+
 
   printf("Last Line of the Story: '%s'\n", file);
   close(fd);
@@ -52,7 +55,7 @@ int main() {
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
-  int write_status = write(fd, line, 200);
+  int write_status = write(fd, line, strlen(line));
   if (write_status == -1){
     printf("Error: %s\n", strerror(errno));
     return 0;

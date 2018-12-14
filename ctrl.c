@@ -45,14 +45,14 @@ int view(){
   int fd = open("story.txt", O_RDONLY);
   if (fd == -1){
     printf("Error: %s\n", strerror(errno));
-    return 1;
+    return 0;
   }
   char * file = calloc(2056, sizeof(char));
   int read_status = read(fd, file, 2056);
-  // if (read_status == -1){
-  //   printf("Errsasdor: %s\n", strerror(errno));
-  //   return 1;
-  // }
+  if (read_status == -1){
+    printf("Error: %s\n", strerror(errno));
+    return 0;
+  }
   printf("'%s'\n", file);
   close(fd);
   return 0;

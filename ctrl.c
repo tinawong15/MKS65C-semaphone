@@ -40,7 +40,7 @@ int create(){
 
 // view function
 int view(){
-  printf("Viewing Semaphore...\n");
+  printf("Viewing Story...\n");
 
   int fd = open("story.txt", O_RDONLY);
   if (fd == -1){
@@ -53,7 +53,11 @@ int view(){
     printf("Error: %s\n", strerror(errno));
     return 0;
   }
+
+  char* p = strrchr(file, '\n');
+  if (p) *p = 0;
   printf("'%s'\n", file);
+
   close(fd);
   return 0;
 }
